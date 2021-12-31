@@ -30,6 +30,11 @@ export class UsersController {
     return this.usersService.find(email);
   }
 
+  @Post('/signin')
+  signin(@Body() body: CreateUserDto) {
+    return this.authService.signin(body.email, body.password);
+  }
+
   @Delete('/:id')
   removeUser(@Param('id') id: string) {
     return this.usersService.remove(parseInt(id));
