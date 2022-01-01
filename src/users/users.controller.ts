@@ -13,7 +13,16 @@ export class UsersController {
 
   @Get('/whoami')
   whoAmI(@Session() session: any) {
-    return this.usersService.findOne(session.userId);
+    const user = this.usersService.findOne(session.userId);
+    if (!user) {
+      throw new NotFoundException("User not found")
+    }
+    return user;
+  }
+
+  @Post('/signout')
+  signOut(@Session() session: any) {
+    session.userId = null;
   }
 
   @Post('/signup')
