@@ -5,10 +5,11 @@ import { UsersService } from './users.service';
 
 describe('AuthService', () => {
   let service: AuthService;
+  let fakeUsersService: Partial<UsersService>;
 
   beforeEach(async () => {
     // create a fake copy of the users service
-    const fakeUsersService: Partial<UsersService> = {
+    fakeUsersService = {
       find: () => Promise.resolve([]),
       create: (email: string, password: string) =>
         Promise.resolve({ id: 1, email, password } as User)
@@ -41,5 +42,17 @@ describe('AuthService', () => {
     expect(salt).toBeDefined();
     expect(hash).toBeDefined();
   });
+
+  it.skip('throws an error if user signs up with an email that is in use', async (done) => {
+    // https://github.com/facebook/jest/issues/10529
+    fakeUsersService.find = () => Promise.resolve([{ id: 1, email: 'asdf@asdf.com', password: '1' } as User]);
+
+    try {
+      await service.signup('asdf@asdf.com', 'asdf');
+    } catch (err) {
+      done();
+    }
+
+  })
 
 });
