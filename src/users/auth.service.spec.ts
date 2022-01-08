@@ -64,4 +64,16 @@ describe('AuthService', () => {
     }
   });
 
+  it.skip('throws if an invalid password is provided', async (done) => {
+    // https://github.com/facebook/jest/issues/10529
+    fakeUsersService.find = () => Promise.resolve([{ id: 1, email: 'asdf@asdf.com', password: '1' } as User]);
+
+    try {
+      await service.signin('afasfdasdfs@afsafds.com', 'password');
+    } catch (err) {
+      done();
+    }
+
+  })
+
 });
