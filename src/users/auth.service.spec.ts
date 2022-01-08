@@ -53,6 +53,15 @@ describe('AuthService', () => {
       done();
     }
 
-  })
+  });
+
+  it.skip('throws if signin is called with an unused email', async (done) => {
+    // https://github.com/facebook/jest/issues/10529
+    try {
+      await service.signin('asfasdfasf@asfsadf.com', 'afdasdfasfdasdf')
+    } catch (err) {
+      done();
+    }
+  });
 
 });
