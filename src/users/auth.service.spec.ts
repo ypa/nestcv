@@ -9,10 +9,17 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     // create a fake copy of the users service
+    const users: User[] = [];
     fakeUsersService = {
-      find: () => Promise.resolve([]),
-      create: (email: string, password: string) =>
-        Promise.resolve({ id: 1, email, password } as User)
+      find: (email: string) => {
+        const filteredUsers = users.filter(user => user.email === email);
+        return Promise.resolve(filteredUsers);
+      },
+      create: (email: string, password: string) => {
+        const user = { id: Math.floor(Math.random() * 999999), email, password } as User;
+        users.push(user);
+        return Promise.resolve(user);
+      }
     }
 
     // create DI container
@@ -77,7 +84,7 @@ describe('AuthService', () => {
   })
 
   it('returns a user if correct password is provided', async () => {
-    fakeUsersService.find = () => Promise.resolve([{ id: 1, email: 'asdf@asdf.com', password: '141356c290047c4b.55b248331b7086ca7a671654065d746a1bd9869463969315165c3bff4f263171' } as User]);
+    await service.signup('asdf@asdf.com', 'mypassword');
 
     const user = await service.signin('asdf@asdf.com', 'mypassword');
     expect(user).toBeDefined();
