@@ -46,4 +46,25 @@ describe('UsersController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+
+  it('findAllUsers returns a list of users with the given email', async () => {
+    const users = await controller.findAllUsers('asdf@asdf.com');
+    expect(users.length).toEqual(1);
+    expect(users[0].email).toEqual('asdf@asdf.com');
+  });
+
+  it('findUser returns a single user with the given id', async () => {
+    const user = await controller.findUser('1');
+    expect(user).toBeDefined();
+  });
+
+  it.skip('findUser throws and error if user with given id is not found', async (done) => {
+    // https://github.com/facebook/jest/issues/10529
+    fakeUsersService.findOne = () => null;
+    try {
+      await controller.findUser('1');
+    } catch (err) {
+      done();
+    }
+  });
 });
